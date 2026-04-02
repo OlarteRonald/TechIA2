@@ -101,7 +101,7 @@ function clearMessageAfterDelay(element) {
 
 // Supabase Configuration
 const SUPABASE_URL = 'https://iyloxlwvonyvsmzxostp.supabase.co';
-const SUPABASE_KEY = 'YOUR_SUPABASE_ANON_KEY'; // USER: Reemplaza con tu Anon Key real
+const SUPABASE_KEY = 'sb_publishable_V_MROInHr66e4dxkOBg6yQ_4q1h5Z9Y';
 
 let supabaseClient = null;
 
