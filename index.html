@@ -1,0 +1,429 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>TechSecure AI | Seguridad Inteligente con IA</title>
+    <meta name="description" content="TechSecure AI ofrece soluciones innovadoras de seguridad con inteligencia artificial, reconocimiento de voz y visión artificial.">
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;700&display=swap" rel="stylesheet">
+    <!-- Lucide Icons -->
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <!-- Supabase -->
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <!-- Teachable Machine -->
+    <script src="https://cdn.jsdelivr.net/npm/@tensorflow/tfjs@latest/dist/tf.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@tensorflow-models/speech-commands@latest/dist/speech-commands.min.js"></script>
+    <!-- Face API for Biometric Recognition -->
+    <script src="https://cdn.jsdelivr.net/npm/@vladmandic/face-api/dist/face-api.min.js"></script>
+    <!-- Custom Style -->
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <!-- AI Detection Status Bar -->
+    <div id="ai-status-bar" class="ai-status">
+        <div class="status-indicator">
+            <span class="dot"></span>
+            <span id="ai-status-text">Iniciando IA...</span>
+        </div>
+        <div class="command-display">
+            Comando detectado: <span id="detected-command">Ninguno</span>
+        </div>
+        <div id="detection-msg" class="detection-msg"></div>
+    </div>
+
+    <!-- VAPI Widget (Ubicado al inicio del body para asegurar carga) -->
+    <vapi-widget
+        public-key="e77c2e30-f591-438a-9e56-9e6da4489122"
+        assistant-id="180c89aa-f3d8-45b3-8984-1448ac96d36a"
+        mode="voice"
+        theme="dark"
+        base-bg-color="#000000"
+        accent-color="#14B8A6"
+        cta-button-color="#000000"
+        cta-button-text-color="#ffffff"
+        border-radius="large"
+        size="full"
+        position="bottom-right"
+        title="HABLA NOVA"
+        start-button-text="Iniciar"
+        end-button-text="Terminar llamada"
+        chat-first-message="Hola, ¿en qué puedo ayudarte hoy?"
+        chat-placeholder="Escribe tu mensaje..."
+        voice-show-transcript="true"
+        consent-required="true"
+        consent-title="Términos y condiciones"
+        consent-content="Al hacer clic en &quot;Acepto&quot;, y cada vez que interactúo con este agente de IA, doy mi consentimiento para la grabación, almacenamiento y uso compartido de mis comunicaciones con terceros proveedores de servicios, tal como se describe en nuestros Términos de Servicio."
+        consent-storage-key="vapi_widget_consent"
+    > 
+    </vapi-widget>
+
+    <script
+        src="https://unpkg.com/@vapi-ai/client-sdk-react/dist/embed/widget.umd.js"
+        async
+        type="text/javascript">
+    </script>
+
+    <!-- Public Site Container -->
+    <div id="public-site">
+        <header id="header">
+            <nav class="nav-container">
+                <div class="logo">
+                    <i data-lucide="shield-check"></i>
+                    <span>TechSecure AI</span>
+                </div>
+                <ul class="nav-menu">
+                    <li><a href="#inicio">Inicio</a></li>
+                    <li><a href="#servicios">Servicios</a></li>
+                    <li><a href="#nosotros">Quiénes somos</a></li>
+                    <li><a href="#tecnologia">Tecnología</a></li>
+                    <li><a href="#contacto">Contacto</a></li>
+                </ul>
+                <button id="auth-trigger" class="btn btn-primary">
+                    <i data-lucide="lock"></i>
+                    Acceso Inteligente
+                </button>
+            </nav>
+        </header>
+
+        <main>
+            <!-- Hero Section -->
+            <section id="inicio" class="hero">
+                <div class="hero-content">
+                    <span class="badge">SaaS de nueva generación</span>
+                    <h1>Acceso Inteligente con IA</h1>
+                    <p>Seguridad, innovación y experiencia. Protegemos lo que más te importa con tecnología de vanguardia.</p>
+                    <div class="hero-actions">
+                        <button class="btn btn-primary btn-lg" onclick="document.getElementById('auth-trigger').click()">Probar acceso</button>
+                        <button class="btn btn-secondary btn-lg">Saber más</button>
+                    </div>
+                </div>
+                <div class="hero-visual">
+                    <div class="glow-sphere"></div>
+                </div>
+            </section>
+
+            <!-- Servicios Section -->
+            <section id="servicios" class="section">
+                <div class="container">
+                    <h2 class="section-title">Nuestros Servicios</h2>
+                    <div class="services-grid">
+                        <div class="card service-card">
+                            <i data-lucide="eye" class="card-icon"></i>
+                            <h3>Acceso Inteligente</h3>
+                            <p>Autenticación multi-factorial mediante voz y reconocimiento facial avanzado.</p>
+                        </div>
+                        <div class="card service-card">
+                            <i data-lucide="code" class="card-icon"></i>
+                            <h3>Desarrollo Web</h3>
+                            <p>Plataformas robustas y escalables con las últimas tecnologías del mercado.</p>
+                        </div>
+                        <div class="card service-card">
+                            <i data-lucide="brain-circuit" class="card-icon"></i>
+                            <h3>IA Customizada</h3>
+                            <p>Modelos de aprendizaje automático adaptados a las necesidades de tu empresa.</p>
+                        </div>
+                        <div class="card service-card">
+                            <i data-lucide="zap" class="card-icon"></i>
+                            <h3>Automatización</h3>
+                            <p>Optimización de procesos internos mediante flujos de trabajo inteligentes.</p>
+                        </div>
+                        <div class="card service-card">
+                            <i data-lucide="monitor" class="card-icon"></i>
+                            <h3>Experiencias Interactivas</h3>
+                            <p>Interfaces que conectan con tus usuarios de manera emocional y efectiva.</p>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Quiénes somos Section -->
+            <section id="nosotros" class="section bg-alt">
+                <div class="container split-grid">
+                    <div class="text-content">
+                        <h2>Quiénes Somos</h2>
+                        <p>Somos una empresa tecnológica líder en el desarrollo de soluciones de seguridad basadas en Inteligencia Artificial. Nuestra misión es democratizar el acceso a tecnologías de alta gama para empresas de todos los tamaños.</p>
+                        <p>En TechSecure AI, creemos que la seguridad no debe ser una barrera, sino un facilitador de la innovación.</p>
+                        <ul class="check-list">
+                            <li><i data-lucide="check"></i> Equipo experto en IA y Ciberseguridad</li>
+                            <li><i data-lucide="check"></i> Innovación constante y disruptiva</li>
+                            <li><i data-lucide="check"></i> Enfoque centrado en la experiencia de usuario</li>
+                        </ul>
+                    </div>
+                    <div class="visual-content">
+                        <div class="tech-graphic"></div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Tecnología Section -->
+            <section id="tecnologia" class="section">
+                <div class="container text-center">
+                    <h2 class="section-title">Tecnología de Vanguardia</h2>
+                    <p class="section-subtitle">Utilizamos las herramientas más potentes del ecosistema IA.</p>
+                    <div class="tech-grid">
+                        <div class="tech-item">
+                            <i data-lucide="mic"></i>
+                            <h4>Reconocimiento de Voz</h4>
+                            <p>Powered by Teachable Machine</p>
+                        </div>
+                        <div class="tech-item">
+                            <i data-lucide="camera"></i>
+                            <h4>Visión Artificial</h4>
+                            <p>Detección facial en tiempo real</p>
+                        </div>
+                        <div class="tech-item">
+                            <i data-lucide="database"></i>
+                            <h4>Supabase Cloud</h4>
+                            <p>Backend robusto y seguro</p>
+                        </div>
+                        <div class="tech-item">
+                            <i data-lucide="headphones"></i>
+                            <h4>Asistente Vapi</h4>
+                            <p>Soporte por voz inteligente</p>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Contact Section -->
+            <section id="contacto" class="section bg-alt">
+                <div class="container narrow">
+                    <h2 class="section-title text-center">Contáctanos</h2>
+                    <form class="contact-form card shadow">
+                        <div class="form-group">
+                            <label for="name">Nombre</label>
+                            <input type="text" id="name" placeholder="Tu nombre" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="email">Email</label>
+                            <input type="email" id="email" placeholder="tu@email.com" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="message">Mensaje</label>
+                            <textarea id="message" rows="4" placeholder="¿En qué podemos ayudarte?" required></textarea>
+                        </div>
+                        <button type="submit" class="btn btn-primary btn-block">Enviar Mensaje</button>
+                    </form>
+                </div>
+            </section>
+
+            <!-- Test Supabase Section (FASE 3) -->
+            <section id="supabase-test" class="section">
+                <div class="container narrow">
+                    <div class="card shadow">
+                        <h2 class="section-title text-center">Prueba de Conexión Supabase</h2>
+                        <p class="text-center">Valida la escritura en la tabla 'usuarios'</p>
+                        <form id="supabase-test-form" class="contact-form">
+                            <div class="form-group">
+                                <label for="db-nombre">Nombre Completo</label>
+                                <input type="text" id="db-nombre" placeholder="Ej: Juan Pérez" required>
+                            </div>
+                            <div class="form-group">
+                                <label for="db-usuario">Usuario</label>
+                                <input type="text" id="db-usuario" placeholder="Ej: juan_perez" required>
+                            </div>
+                            <button type="submit" class="btn btn-secondary btn-block">Guardar en Supabase</button>
+                        </form>
+                        <div id="db-status-msg" class="text-center" style="margin-top: 15px; font-weight: bold;"></div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Test Camera Section (FASE 4) -->
+            <section id="camera-test" class="section bg-alt">
+                <div class="container narrow">
+                    <div class="card shadow">
+                        <h2 class="section-title text-center">Prueba de Cámara</h2>
+                        <p class="text-center">Valida el acceso a la cámara y captura en Base64</p>
+                        
+                        <div class="camera-container" style="text-align: center; margin-top: 20px;">
+                            <video id="camera-feed" autoplay playsinline style="width: 100%; max-width: 400px; border-radius: 10px; background: #000; border: 1px solid var(--border); display: none; margin: 0 auto;"></video>
+                            <img id="camera-preview" style="width: 100%; max-width: 400px; border-radius: 10px; border: 1px solid var(--border); display: none; margin: 0 auto;" />
+                        </div>
+                        
+                        <div style="display: flex; gap: 10px; justify-content: center; margin-top: 20px;">
+                            <button id="btn-start-camera" class="btn btn-primary">Activar Cámara</button>
+                            <button id="btn-capture-photo" class="btn btn-secondary" style="display: none;">Capturar Foto</button>
+                        </div>
+                        
+                        <div id="base64-output-container" style="margin-top: 20px; display: none;">
+                            <p style="font-weight: bold; margin-bottom: 5px;">Imagen (Base64):</p>
+                            <textarea id="base64-output" rows="2" readonly style="width: 100%; font-size: 0.8rem; background: var(--bg-color); color: var(--text-muted); border: 1px solid var(--border); border-radius: 8px; padding: 10px; margin-bottom: 10px;"></textarea>
+                            
+                            <!-- Test Supabase Storage FASE 5 -->
+                            <div class="card" style="padding: 15px; border: 1px dashed var(--accent); text-align: left;">
+                                <div id="storage-status-msg" style="font-weight: bold; margin-bottom: 5px;">Esperando captura...</div>
+                                <div id="storage-url-container" style="display: none; margin-top: 10px;">
+                                    <p style="font-weight: bold; font-size: 0.9rem; margin-bottom: 5px;">URL Pública (Storage):</p>
+                                    <a id="storage-url" href="#" target="_blank" style="color: #00ff88; word-break: break-all; font-size: 0.85rem;"></a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+        </main>
+
+        <footer class="footer">
+            <div class="container">
+                <p>&copy; 2026 TechSecure AI. Todos los derechos reservados.</p>
+            </div>
+        </footer>
+    </div>
+
+    <!-- Auth Modal / Transition -->
+    <div id="auth-modal" class="modal">
+        <div class="modal-content glass">
+            <button class="modal-close">&times;</button>
+            
+            <!-- Flow Selection -->
+            <div id="auth-flow-selection">
+                <div style="margin-bottom: 20px;">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="var(--accent)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="pulse" style="filter: drop-shadow(0 0 10px var(--accent-glow));">
+                        <path d="M12 2a3 3 0 0 0-3 3v7a3 3 0 0 0 6 0V5a3 3 0 0 0-3-3Z"></path>
+                        <path d="M19 10v2a7 7 0 0 1-14 0v-2"></path>
+                        <line x1="12" x2="12" y1="19" y2="22"></line>
+                        <line x1="8" x2="16" y1="22" y2="22"></line>
+                    </svg>
+                </div>
+                <h2>Acceso Inteligente</h2>
+                <p>¿Qué deseas hacer?</p>
+                <div id="selection-status-message" style="margin:15px 0; font-weight: 600; color: var(--accent);">Dí "ingresar" o "registrar"</div>
+                
+                <div style="display: flex; gap: 15px; justify-content: center; margin-top: 25px;">
+                    <button id="btn-select-login" class="btn btn-primary" style="flex: 1;">Ingresar</button>
+                    <button id="btn-select-register" class="btn btn-secondary" style="flex: 1;">Registrar</button>
+                </div>
+            </div>
+
+            <div id="auth-flow-step-1" style="display: none;">
+                <h2>Iniciar Sesión</h2>
+                <p>Accede a tu panel de control seguro</p>
+                <form id="login-form">
+                    <div class="form-group">
+                        <label>Usuario</label>
+                        <input type="text" id="login-username" required>
+                    </div>
+                    <div class="form-group">
+                        <label>Contraseña</label>
+                        <input type="password" id="login-password" required>
+                    </div>
+                    <div id="login-error-msg" style="color: #ff4d4d; margin-bottom: 10px; font-size: 0.9em; font-weight: bold;"></div>
+                    <button type="submit" id="btn-login-next" class="btn btn-primary btn-block">Siguiente</button>
+                </form>
+            </div>
+            
+            <div id="auth-flow-step-2" style="display: none;">
+                <h2>Verificación de Identidad</h2>
+                <p>Autenticación Biométrica</p>
+                <div class="auth-visual" style="margin-bottom: 15px;">
+                    <video id="login-camera-feed" autoplay playsinline style="width: 100%; border-radius: 10px; border: 1px solid var(--border); display: none;"></video>
+                </div>
+                <div id="login-status-message" style="margin-top:10px; font-weight:bold;">Activando cámara...</div>
+                
+                <div style="display: flex; gap: 10px; justify-content: center; margin-top: 15px;">
+                    <button id="login-btn-verify" class="btn btn-primary" style="display: none;" disabled>Escaneando rostro...</button>
+                </div>
+            </div>
+
+            <!-- FASE 6: Register Flow -->
+            <div id="register-flow-step-1" style="display: none;">
+                <h2>Registro Nuevo</h2>
+                <p>Ingresa tus datos personales</p>
+                <form id="register-form">
+                    <div class="form-group">
+                        <label>Nombre Completo</label>
+                        <input type="text" id="reg-nombre" required>
+                    </div>
+                    <div class="form-group">
+                        <label>Correo</label>
+                        <input type="email" id="reg-email" required>
+                    </div>
+                    <div class="form-group">
+                        <label>Usuario</label>
+                        <input type="text" id="reg-username" required>
+                    </div>
+                    <div class="form-group">
+                        <label>Contraseña</label>
+                        <input type="password" id="reg-password" required>
+                    </div>
+                    <button type="submit" class="btn btn-primary btn-block">Siguiente: Foto</button>
+                </form>
+            </div>
+
+            <div id="register-flow-step-2" style="display: none;">
+                <h2>Registro Biométrico</h2>
+                <p>Captura tu rostro para acceso seguro</p>
+                <div class="auth-visual" style="margin-bottom: 15px;">
+                    <video id="reg-camera-feed" autoplay playsinline style="width: 100%; border-radius: 10px; border: 1px solid var(--border); display: none;"></video>
+                    <img id="reg-camera-preview" style="width: 100%; border-radius: 10px; border: 1px solid var(--border); display: none;" />
+                </div>
+                <div id="reg-status-message" style="margin-top:10px; font-weight:bold;">Activando cámara...</div>
+                
+                <div style="display: flex; gap: 10px; justify-content: center; margin-top: 15px;">
+                    <button id="reg-btn-capture" class="btn btn-primary" style="display: none;">Capturar Rostro</button>
+                    <button id="reg-btn-save" class="btn btn-secondary" style="display: none;">Guardar Registro</button>
+                </div>
+            </div>
+
+        </div>
+    </div>
+
+    <!-- Private Platform (Dashboard) -->
+    <div id="dashboard" style="display: none;">
+        <aside class="sidebar">
+            <div class="logo">
+                <i data-lucide="shield-check"></i>
+                <span>TechSecure</span>
+            </div>
+            <nav class="sidebar-nav">
+                <a href="#" class="active"><i data-lucide="layout-dashboard"></i> Inicio</a>
+                <a href="#"><i data-lucide="shield"></i> Seguridad</a>
+                <a href="#"><i data-lucide="users"></i> Usuarios</a>
+                <a href="#"><i data-lucide="activity"></i> Actividad</a>
+                <a href="#"><i data-lucide="settings"></i> Configuración</a>
+                <button id="logout-btn" class="logout-btn"><i data-lucide="log-out"></i> Cerrar Sesión</button>
+            </nav>
+        </aside>
+        <main class="dashboard-content">
+            <header class="dashboard-header">
+                <div class="welcome">
+                    <h1>Bienvenido, <span id="user-name">Usuario</span></h1>
+                    <p>Tu infraestructura está protegida.</p>
+                </div>
+            </header>
+            <section class="metrics-grid">
+                <div class="card metric-card">
+                    <span class="label">Accesos Hoy</span>
+                    <span class="value">128</span>
+                    <span class="trend pos">+12%</span>
+                </div>
+                <div class="card metric-card">
+                    <span class="label">Alertas Bloqueadas</span>
+                    <span class="value">0</span>
+                    <span class="status secure">Sistema Seguro</span>
+                </div>
+                <div class="card metric-card">
+                    <span class="label">Uptime</span>
+                    <span class="value">99.9%</span>
+                    <span class="trend pos">Estable</span>
+                </div>
+            </section>
+            <section class="activity-section">
+                <div class="card table-card">
+                    <h3>Actividad Reciente</h3>
+                    <div id="activity-list">
+                        <!-- Filled by JS -->
+                    </div>
+                </div>
+            </section>
+        </main>
+    </div>
+
+    <!-- Scripts -->
+    <script src="main.js"></script>
+</body>
+</html>
